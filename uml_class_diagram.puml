@@ -1,0 +1,39 @@
+@startuml
+package "model" {
+  class Movie
+  class Theatre
+  class Screen
+  class Show
+  abstract class Seat
+  class RegularSeat
+  class PremiumSeat
+  class ReclinerSeat
+  class Booking
+  class User
+  enum SeatType
+  enum SeatStatus
+  Seat <|-- RegularSeat
+  Seat <|-- PremiumSeat
+  Seat <|-- ReclinerSeat
+  Show *-- Seat
+  Show --> Movie
+  Show --> Theatre
+  Show --> Screen
+  Booking --> User
+  Booking --> Show
+  Seat --> SeatType
+  Seat --> SeatStatus
+}
+package "service" {
+  class BookingService
+  class SeatHoldTimer
+  BookingService ..> SeatHoldTimer : starts thread
+}
+package "exception" { class SeatAlreadyBookedException }
+package "util" { class FileStorage }
+package "ui" { class BookingFrame }
+BookingFrame --> BookingService
+BookingService ..> SeatAlreadyBookedException
+BookingService ..> FileStorage
+SeatHoldTimer ..> BookingService : releases expired hold
+@enduml
